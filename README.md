@@ -20,8 +20,6 @@ T-RexX/
 │   │   └── item.py                 # Pydantic request/response models
 │   └── services/
 │       └── item_service.py         # Business logic (no HTTP knowledge)
-├── tests/
-│   └── test_items.py
 ├── requirements.txt                # Runtime dependencies
 ├── requirements-dev.txt            # + test/lint tooling
 ├── .env.example                    # Copy to .env
