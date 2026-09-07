@@ -5,7 +5,7 @@ FastAPI backend with a layered structure that keeps HTTP, business logic, and da
 ## Project structure
 
 ```
-T-RexX/
+T-RexEx-backend/
 ├── app/
 │   ├── main.py                     # App factory + entrypoint (create_app, app)
 │   ├── core/
