@@ -1,0 +1,19 @@
+# Standalone backend dev only.
+# Production is built by the outer compose (frontend + backend)
+services:
+  backend:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount local code into the container so edits apply instantly
+      - .:/app
+    environment:
+      # Force watchfiles to poll: fs events do not cross bind mounts on macOS/Windows
+      - WATCHFILES_FORCE_POLLING=true
+      - DEBUG=true
+    env_file:
+      - path: .env
+        required: false
