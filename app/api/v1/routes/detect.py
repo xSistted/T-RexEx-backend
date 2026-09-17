@@ -19,7 +19,7 @@ router = APIRouter(tags=["detect"])
 RULE_MODULES = {
     "email": (email, "อีเมล"),
     "credit_card": (credit, "เลขบัตรเครดิต"),
-    "phone": (tel_censor_service, "เบอร์โทรศัพท์"),
+    "tel": (tel_censor_service, "เบอร์โทรศัพท์"),
     "dob": (dob_censor_service, "วันเกิด"),
     "address": (address_censor_service, "ที่อยู่"),
 }
