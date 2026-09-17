@@ -2,16 +2,20 @@ import re
 phoneNumRegEx = re.compile(r'\d{3}-\d{3}-\d{4}')
 
 def detect(string: str):
-    output = {}
+    output = []
     matches = re.finditer(phoneNumRegEx, string)
     for match in matches:
-        output[match.group()] = match.span()
+        output.append({
+            "position": (match.start(), match.end()),
+            "keyword": match.group(0),
+        })
     return output
 
 def censor(string: str):
     founds = detect(string)
     temp = string
-    for key in founds.keys():
+    for found in founds:
+        key = found["keyword"]
         temp = temp.replace(key, "XXX-XXX-" + key[8:])
     return temp
 

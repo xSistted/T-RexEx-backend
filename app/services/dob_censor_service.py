@@ -2,16 +2,20 @@ import re
 dobRegEx = re.compile(r'DOB:\s*(\d{2}/\d{2}/\d{4})')
 
 def detect(string: str):
-    output = {}
+    output = []
     matches = re.finditer(dobRegEx, string)
     for match in matches:
-        output[match.group()] = match.span()
+        output.append({
+                    "position": (match.start(), match.end()),
+                    "keyword": match.group(0),
+                })
     return output
 
 def censor(string: str):
     founds = detect(string)
     temp = string
-    for key in founds.keys():
+    for found in founds:
+        key = found["keyword"]
         temp = temp.replace(key, key[:4] + "XX/XX/" + key[10:12] + "XX")
     return temp
 
