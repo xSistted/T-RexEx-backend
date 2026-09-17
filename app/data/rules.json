@@ -37,7 +37,7 @@
       "description": "เก็บตัวอักษรแรกและตัวสุดท้ายของ local part"
     },
     {
-      "id": "tel",
+      "id": "phone",
       "label_th": "เบอร์โทรศัพท์",
       "label_en": "Telephone",
       "pattern": "\\d{3}-\\d{3}-\\d{4}",
