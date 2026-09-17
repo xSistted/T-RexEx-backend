@@ -2,10 +2,13 @@ import re
 dobRegEx = re.compile(r'Address: \s*(\d+(?:/\d+)?)')
 
 def detect(string: str):
-    output = {}
+    output = []
     matches = re.finditer(dobRegEx, string)
     for match in matches:
-        output[match.group()] = match.span()
+        output.append({
+            "position": (match.start(), match.end()),
+            "keyword": match.group(0),
+        })
     return output
 
 def censor(string: str):
