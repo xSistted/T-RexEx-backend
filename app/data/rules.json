@@ -1,0 +1,49 @@
+{
+  "rules": [
+    {
+      "id": "address",
+      "label_th": "ที่อยู่",
+      "label_en": "Address",
+      "pattern": "Address:\\s*(\\d+(?:/\\d+)?)",
+      "example_before": "Address: 689/12 Sukhumvit Road",
+      "example_after": "Address: XXXXXX Sukhumvit Road",
+      "description": "เซ็นเซอร์เฉพาะเลขที่บ้านหลังคำว่า Address:"
+    },
+    {
+      "id": "credit_card",
+      "label_th": "เลขบัตรเครดิต",
+      "label_en": "Credit Card",
+      "pattern": "(?<![0-9-])[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}(?![0-9-])",
+      "example_before": "1234-5678-9012-3456",
+      "example_after": "XXXX-XXXX-XXXX-3456",
+      "description": "เก็บเฉพาะ 4 ตัวท้าย"
+    },
+    {
+      "id": "dob",
+      "label_th": "วันเดือนปีเกิด",
+      "label_en": "Date of Birth",
+      "pattern": "DOB:\\s*(\\d{2}/\\d{2}/\\d{4})",
+      "example_before": "DOB:25/12/2549",
+      "example_after": "DOB:XX/XX/25XX",
+      "description": "เก็บเฉพาะ 2 ตัวแรกของปี"
+    },
+    {
+      "id": "email",
+      "label_th": "อีเมล",
+      "label_en": "Email",
+      "pattern": "(?<![A-Za-z0-9._%+-])[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,63}(?![A-Za-z0-9._-])",
+      "example_before": "somchai.d@company.com",
+      "example_after": "s*******d@company.com",
+      "description": "เก็บตัวอักษรแรกและตัวสุดท้ายของ local part"
+    },
+    {
+      "id": "tel",
+      "label_th": "เบอร์โทรศัพท์",
+      "label_en": "Telephone",
+      "pattern": "\\d{3}-\\d{3}-\\d{4}",
+      "example_before": "093-245-7894",
+      "example_after": "XXX-XXX-7894",
+      "description": "เก็บเฉพาะ 4 ตัวท้าย"
+    }
+  ]
+}
