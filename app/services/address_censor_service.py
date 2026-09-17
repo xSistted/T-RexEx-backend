@@ -14,7 +14,8 @@ def detect(string: str):
 def censor(string: str):
     founds = detect(string)
     temp = string
-    for key in founds.keys():
+    for found in founds:
+        key = found["keyword"]
         num = key[9:]
         temp = temp.replace(key, "Address: " + "X" * len(num))
     return temp
