@@ -1,5 +1,5 @@
 import re
-phoneNumRegEx = re.compile(r'(?<![\d-])\d{3}-\d{3}-\d{4}(?![\d-])')
+phoneNumRegEx = re.compile(r'(?<![\d+-])(?:\+66-\d{2}-\d{3}-\d{4}|\d{3}-\d{3}-\d{4}|\d{10})(?![\d-])')
 
 def detect(string: str):
     output = []
@@ -12,12 +12,11 @@ def detect(string: str):
     return output
 
 def censor(string: str):
-    founds = detect(string)
-    temp = string
-    for found in founds:
-        key = found["keyword"]
-        temp = temp.replace(key, "XXX-XXX-" + key[8:])
-    return temp
+    def replace(match):
+        key = match.group(0)
+        prefix = key[:4] if key.startswith("+66-") else ""
+        return prefix + re.sub(r'\d', 'X', key[len(prefix):-4]) + key[-4:]
+    return phoneNumRegEx.sub(replace, string)
 
 test = """My name is Somchai. You can contact me at 093-245-7894 or 081-555-1234.
 My DOB:25/12/2549 and my brother's DOB:10/03/2547.

@@ -19,6 +19,29 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class MaskingRegressions(unittest.TestCase):
+    def test_additional_numeric_formats(self):
+        cases = {
+            "1234567890123456": ("XXXXXXXXXXXX3456", "credit_card"),
+            "0932457894": ("XXXXXX7894", "phone"),
+            "+66-93-245-7894": ("+66-XX-XXX-7894", "phone"),
+        }
+        for text, (expected, rule_id) in cases.items():
+            with self.subTest(text=text):
+                response = mask(MaskRequest(text=text))
+                self.assertEqual(response.masked_text, expected)
+                self.assertEqual(response.summary.by_type, {rule_id: 1})
+                self.assertEqual(detect(DetectRequest(text=text)).summary.by_type, {rule_id: 1})
+                self.assertEqual(mask(MaskRequest(text=expected)).masked_text, expected)
+                for neighbor in "0123456789-":
+                    for invalid in [neighbor + text, text + neighbor]:
+                        self.assertEqual(mask(MaskRequest(text=invalid)).masked_text, invalid)
+        text = " | ".join(cases)
+        self.assertEqual(mask(MaskRequest(text=text)).masked_text, " | ".join(v[0] for v in cases.values()))
+        for rule in get_rules().rules:
+            for text in cases:
+                self.assertEqual([d["position"] for d in RULE_MODULES[rule.id][0].detect(text)],
+                                 [(m.start(), m.end()) for m in re.finditer(rule.pattern, text)])
+
     def test_overlapping_masks_are_order_independent(self):
         cases = {
             "DOB:25/12/2549@mail.com": "DOB:XX/XX/2**X@mail.com",

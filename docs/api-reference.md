@@ -64,6 +64,12 @@ PII / PDPA data-masking API. เอกสารนี้อธิบาย endpo
 `enabled_rules: []` disables every rule and returns the original text. Duplicate
 rule IDs are counted once. The supplied order does not affect the result.
 
+Additional supported formats: `1234567890123456` → `XXXXXXXXXXXX3456`,
+`0932457894` → `XXXXXX7894`, and `+66-93-245-7894` → `+66-XX-XXX-7894`.
+Bare numeric strings of these lengths are masked by shape, without checking
+whether they represent an actual card or phone. Spaces and other international
+formats are not currently supported.
+
 ### Response `200`
 
 ```json
