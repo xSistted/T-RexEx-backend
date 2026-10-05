@@ -27,4 +27,5 @@ My mother's DOB:05/08/2525 and her address is Address: 123/45 Rama 9 Road, Huai 
 Another contact is 090-111-2222. His DOB:01/01/2540.
 His address is Address: 78/9 Phahonyothin Road, Chatuchak, Bangkok 10900."""
 
-print(censor(test))
+if __name__ == "__main__":
+    print(censor(test))

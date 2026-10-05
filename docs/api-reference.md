@@ -61,6 +61,9 @@ PII / PDPA data-masking API. เอกสารนี้อธิบาย endpo
 | `enabled_rules` | string[] \| null | not required | `null` → รันทั้ง 5 กฎ | ผูกกับ checkbox บนหน้าเว็บ · id ที่ไม่รู้จักจะถูก **ข้ามเงียบ ๆ** (ไม่ error) |
 | `include_matches` | boolean | not required | `true` | `false` → field `matches` คืนเป็น `null` |
 
+`enabled_rules: []` disables every rule and returns the original text. Duplicate
+rule IDs are counted once. The supplied order does not affect the result.
+
 ### Response `200`
 
 ```json
@@ -124,10 +127,19 @@ Request เหมือน `/mask` ทุกอย่าง — Response **ต�
 ### สิ่งที่ backend การันตี
 
 - `matches` เรียงตาม `start` จากน้อยไปมากเสมอ (ไม่จัดกลุ่มตาม rule)
-- `start` / `end` เป็น character offset ของ **ข้อความต้นฉบับ** — Python `len()` และ JS `.length` ให้ค่าตรงกัน
+- `start` / `end` เป็น Unicode code-point offset ของ **ข้อความต้นฉบับ** — JavaScript uses UTF-16 offsets, so emoji may require conversion in the frontend.
 - ไม่มีค่าต้นฉบับ (raw PII) ส่งกลับไป — มีแค่ประเภทและตำแหน่ง
 - ค่าเดียวกันโผล่หลายที่ = หลาย match (ไม่ dedupe)
 - `by_type` ไม่มี key ของกฎที่ไม่เจออะไรเลย → frontend ใช้ `by_type[rule] ?? 0`
+
+Matches may overlap when the original text satisfies multiple rules. Both
+detections are retained and counted by type. Masking combines every rule's hidden
+characters using the original text and positions, so one rule cannot prevent
+another from masking. At shared hidden positions, email's `*` takes precedence
+over `X`; neither marker exposes the original character. A character normally
+retained by one rule can be hidden if another rule requires it.
+
+Example: `DOB:25/12/2549@mail.com` becomes `DOB:XX/XX/2**X@mail.com`.
 
 ---
 

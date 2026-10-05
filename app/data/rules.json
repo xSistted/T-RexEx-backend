@@ -31,7 +31,7 @@
       "id": "email",
       "label_th": "อีเมล",
       "label_en": "Email",
-      "pattern": "(?<![A-Za-z0-9._%+-])[A-Za-z0-9_%+-]+(?:\\.[A-Za-z0-9_%+-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\\.)+[A-Za-z]{2,63}(?![A-Za-z0-9_-]|\\.[A-Za-z0-9_-])",
+      "pattern": "(?<![A-Za-z0-9._%+@-])[A-Za-z0-9_%+-]+(?:\\.[A-Za-z0-9_%+-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\\.)+[A-Za-z]{2,63}(?![A-Za-z0-9_-]|\\.[A-Za-z0-9_-])",
       "example_before": "somchai.d@company.com",
       "example_after": "s*******d@company.com",
       "description": "เก็บตัวอักษรแรกและตัวสุดท้ายของ local part"

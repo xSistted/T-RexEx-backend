@@ -1,5 +1,8 @@
 # API Contract — Data Masking for PDPA
 
+This is the original design proposal. See `api-reference.md` for the implemented
+contract, including original-text masking, overlap handling, and rule selection.
+
 **Stack:** Python + FastAPI 
 
 **Base URL:** `https://<domain>/api/v1` 
@@ -79,8 +82,8 @@
 ### กฎของ `matches` ที่ backend การันตี
 
 - เรียงตาม `start` จากน้อยไปมากเสมอ (ไม่ได้จัดกลุ่มตาม rule)
-- ไม่มีช่วงไหนซ้อนทับกัน
-- `start` / `end` คือ character offset ของ **ข้อความต้นฉบับ** — Python `len()` และ JS `.length` ให้ค่าตรงกัน
+- Match ranges may overlap when multiple rules detect the same source characters; all required masking is combined.
+- `start` / `end` are Unicode code-point offsets into the original text. JavaScript UTF-16 offsets can differ after emoji.
 - **ไม่มีค่าต้นฉบับส่งกลับไปเด็ดขาด** มีแค่ประเภท ตำแหน่ง และค่าที่เซ็นเซอร์แล้ว
 - ค่าเดียวกันที่โผล่หลายที่ = หลาย match (ไม่ dedupe ให้)
 - `by_type` ไม่มี key ของกฎที่ไม่เจออะไรเลย → ฝั่ง frontend ใช้ `by_type[rule] ?? 0`
@@ -157,5 +160,5 @@ Request เหมือน `/mask` ทุกอย่าง — Response ตั�
 2. **span ของ `address`** ตอนนี้ครอบคำว่า `Address: ` เข้าไปด้วย ทำให้ `masked_value` เป็น `"Address: XXX"`
    ถ้าจะไฮไลต์เฉพาะเลขที่บ้าน ต้องขยับ span → **แก้ทีหลังกระทบทั้งสองฝั่ง**
 3. **รูปแบบที่อยู่แปลก ๆ** เช่น `689/12`, `98/1 หมู่ 4` จะแทนด้วย `X` กี่ตัว
-4. **ติ๊กออกหมด (`enabled_rules: []`)** จะคืนข้อความเดิม หรือ block ปุ่มที่ฝั่ง UI
+4. **ติ๊กออกหมด (`enabled_rules: []`)** คืนข้อความเดิม ไม่ใช้กฎใดเลย
 5. **ใครทำ highlight rendering** — backend ส่ง offset ให้แล้ว ฝั่ง frontend จัดการ DOM เองมั้ย

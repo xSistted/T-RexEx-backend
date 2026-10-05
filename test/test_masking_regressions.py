@@ -12,11 +12,41 @@ with contextlib.redirect_stdout(io.StringIO()):
     from app.api.v1.routes.mask import mask, RULE_MODULES
     from app.schemas.mask import MaskRequest
     from app.services.rule_service import get_rules
+    from app.api.v1.routes.detect import detect
+    from app.schemas.detect import DetectRequest
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class MaskingRegressions(unittest.TestCase):
+    def test_overlapping_masks_are_order_independent(self):
+        cases = {
+            "DOB:25/12/2549@mail.com": "DOB:XX/XX/2**X@mail.com",
+            "093-245-7894@sms.bank.co.th": "X**********4@sms.bank.co.th",
+            "Address: 093-245-7894": "Address: XXX-XXX-7894",
+        }
+        for text, expected in cases.items():
+            for order in itertools.permutations(RULE_MODULES):
+                with self.subTest(text=text, order=order):
+                    response = mask(MaskRequest(text=text, enabled_rules=list(order)))
+                    detected = detect(DetectRequest(text=text, enabled_rules=list(order)))
+                    self.assertEqual(response.masked_text, expected)
+                    self.assertEqual(response.summary.model_dump(), detected.summary.model_dump())
+                    self.assertEqual([m.model_dump() for m in response.matches], [m.model_dump() for m in detected.matches])
+                    self.assertEqual(mask(MaskRequest(text=expected)).masked_text, expected)
+
+    def test_rule_selection_and_malformed_email(self):
+        text = "093-245-7894"
+        response = mask(MaskRequest(text=text, enabled_rules=[]))
+        self.assertEqual(response.masked_text, text)
+        self.assertEqual(response.summary.total, 0)
+        self.assertEqual(detect(DetectRequest(text=text, enabled_rules=[])).summary.total, 0)
+        for selected in [["phone", "phone"], ["unknown", "phone"], None]:
+            with self.subTest(selected=selected):
+                self.assertEqual(mask(MaskRequest(text=text, enabled_rules=selected)).summary.total, 1)
+                self.assertEqual(detect(DetectRequest(text=text, enabled_rules=selected)).summary.total, 1)
+        self.assertEqual(mask(MaskRequest(text="@abc@mail.com")).masked_text, "@abc@mail.com")
+
     def test_existing_csv(self):
         with (ROOT / "test/data/pdpa_masking_test_cases.csv").open(encoding="utf-8-sig", newline="") as stream:
             for row in csv.DictReader(stream):
