@@ -1,5 +1,5 @@
 import re
-dobRegEx = re.compile(r'DOB:\s*(\d{2}/\d{2}/\d{4})')
+dobRegEx = re.compile(r'(DOB:\s*)\d{2}/\d{2}/(\d{2})\d{2}(?!\d)')
 
 def detect(string: str):
     output = []
@@ -12,12 +12,7 @@ def detect(string: str):
     return output
 
 def censor(string: str):
-    founds = detect(string)
-    temp = string
-    for found in founds:
-        key = found["keyword"]
-        temp = temp.replace(key, key[:4] + "XX/XX/" + key[10:12] + "XX")
-    return temp
+    return dobRegEx.sub(lambda match: match.group(1) + "XX/XX/" + match.group(2) + "XX", string)
 
 
 test = """My name is Somchai. You can contact me at 093-245-7894 or 081-555-1234.

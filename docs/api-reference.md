@@ -22,7 +22,7 @@ PII / PDPA data-masking API. เอกสารนี้อธิบาย endpo
 | `credit_card` | เลขบัตรเครดิต | `1234-5678-9012-3456` | `XXXX-XXXX-XXXX-3456` | 4 ตัวท้าย |
 | `phone` | เบอร์โทรศัพท์ | `093-245-7894` | `XXX-XXX-7894` | 4 ตัวท้าย |
 | `dob` | วันเดือนปีเกิด | `DOB:25/12/2549` | `DOB:XX/XX/25XX` | 2 ตัวแรกของปี |
-| `address` | ที่อยู่ | `Address: 689/12 Sukhumvit Road` | `Address: XXXXXX Sukhumvit Road` | เซ็นเซอร์เฉพาะเลขที่บ้านหลัง `Address:` |
+| `address` | ที่อยู่ | `Address: 689/12 Sukhumvit Road` | `Address: XXX/XX Sukhumvit Road` | เซ็นเซอร์เฉพาะเลขที่บ้านหลัง `Address:` |
 
 > รายละเอียด regex / ตัวอย่างเต็มดึงได้จาก `GET /rules` (ดูด้านล่าง)
 

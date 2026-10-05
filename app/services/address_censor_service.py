@@ -1,5 +1,5 @@
 import re
-dobRegEx = re.compile(r'Address: \s*(\d+(?:/\d+)?)')
+dobRegEx = re.compile(r'(Address:\s*)(\d+(?:/\d+)?)')
 
 def detect(string: str):
     output = []
@@ -12,13 +12,10 @@ def detect(string: str):
     return output
 
 def censor(string: str):
-    founds = detect(string)
-    temp = string
-    for found in founds:
-        key = found["keyword"]
-        num = key[9:]
-        temp = temp.replace(key, "Address: " + "X" * len(num))
-    return temp
+    return dobRegEx.sub(
+        lambda match: match.group(1) + re.sub(r'\d', 'X', match.group(2)),
+        string,
+    )
 
 test = """My name is Somchai. You can contact me at 093-245-7894 or 081-555-1234.
 My DOB:25/12/2549 and my brother's DOB:10/03/2547.

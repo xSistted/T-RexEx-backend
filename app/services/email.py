@@ -26,7 +26,7 @@ _PATTERN = re.compile(
         [A-Za-z]{2,63}
     )
 
-    (?![A-Za-z0-9._-])
+    (?![A-Za-z0-9_-]|\.[A-Za-z0-9_-])
     """,
     re.IGNORECASE | re.VERBOSE,
 )
