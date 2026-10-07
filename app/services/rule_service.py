@@ -1,9 +1,3 @@
-"""Loads the static masking-rule metadata from disk.
-
-Rules are stateless reference data, so the JSON file is read once and cached
-for the lifetime of the process.
-"""
-
 import json
 from functools import lru_cache
 from pathlib import Path
@@ -15,7 +9,7 @@ _RULES_FILE = Path(__file__).resolve().parent.parent / "data" / "rules.json"
 
 @lru_cache
 def get_rules() -> RuleList:
-    """Return the parsed, validated rule list (cached after first read)."""
+
     with _RULES_FILE.open(encoding="utf-8") as fh:
         data = json.load(fh)
     return RuleList.model_validate(data)

@@ -1,9 +1,3 @@
-"""Application entrypoint.
-
-Run in development with:
-    uvicorn app.main:app --reload
-"""
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,7 +6,7 @@ from app.core.config import settings
 
 
 def create_app() -> FastAPI:
-    """Application factory — builds and configures the FastAPI instance."""
+
     app = FastAPI(
         title=settings.APP_NAME,
         version=settings.APP_VERSION,
