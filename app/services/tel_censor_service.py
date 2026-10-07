@@ -1,5 +1,5 @@
 import re
-phoneNumRegEx = re.compile(r'(?<![\d+-])(?:\+66-\d{2}-\d{3}-\d{4}|\d{3}-\d{3}-\d{4}|\d{10})(?![\d-])')
+phoneNumRegEx = re.compile(r'(?<![\d+-])(?:\+66-\d{2}-\d{3}-\d{4}|\d{3}-\d{3}-\d{4}|\d{3} \d{3} \d{4}|\d{10})(?![\d-])')
 
 def detect(string: str):
     output = []

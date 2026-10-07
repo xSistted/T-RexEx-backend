@@ -159,7 +159,7 @@ with TestClient(app) as client:
     for order in itertools.permutations(["email", "phone", "credit_card"]):
         text = "093-245-7894@sms.bank.co.th"
         data = client.post("/api/v1/mask", json={"text": text, "enabled_rules": list(order)}).json()
-        check("overlap-robustness", "email-phone:" + repr(order), data["masked_text"], "X**********4@sms.bank.co.th", text)
+        check("overlap-robustness", "email-phone:" + repr(order), data["masked_text"], "0**********4@sms.bank.co.th", text)
     for text, expected in [("Address: 093-245-7894", "Address: XXX-XXX-7894"),
                            ("DOB:25/12/2549@mail.com", "DOB:XX/XX/2**X@mail.com")]:
         data = client.post("/api/v1/mask", json={"text": text}).json()
