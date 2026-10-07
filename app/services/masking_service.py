@@ -1,3 +1,5 @@
+from bisect import bisect_right
+
 from app.services import email, credit, tel_censor_service, dob_censor_service, address_censor_service
 from app.services.types import Detection
 
@@ -17,7 +19,16 @@ def detect(text: str, enabled_rules: list[str] | None = None) -> list[tuple[str,
         for rule_id, (module, label) in RULE_MODULES.items() if rule_id in enabled
         for detection in module.detect(text)
     ]
-    return sorted(found, key=lambda item: item[2]["position"][0])
+    email_spans = [d["position"] for rule_id, _, d in found if rule_id == "email"]
+    email_starts = [start for start, _ in email_spans]
+    selected = []
+    for rule_id, label, detection in found:
+        start, end = detection["position"]
+        index = bisect_right(email_starts, start) - 1
+        if rule_id == "phone" and index >= 0 and end <= email_spans[index][1]:
+            continue
+        selected.append((rule_id, label, detection))
+    return sorted(selected, key=lambda item: item[2]["position"][0])
 
 
 def censor(text: str, detections: list[tuple[str, str, Detection]]) -> str:

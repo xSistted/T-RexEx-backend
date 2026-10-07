@@ -22,7 +22,9 @@ class MaskingRegressions(unittest.TestCase):
     def test_additional_numeric_formats(self):
         cases = {
             "1234567890123456": ("XXXXXXXXXXXX3456", "credit_card"),
+            "1234 5678 9012 3456": ("XXXX XXXX XXXX 3456", "credit_card"),
             "0932457894": ("XXXXXX7894", "phone"),
+            "093 245 7894": ("XXX XXX 7894", "phone"),
             "+66-93-245-7894": ("+66-XX-XXX-7894", "phone"),
         }
         for text, (expected, rule_id) in cases.items():
@@ -45,7 +47,7 @@ class MaskingRegressions(unittest.TestCase):
     def test_overlapping_masks_are_order_independent(self):
         cases = {
             "DOB:25/12/2549@mail.com": "DOB:XX/XX/2**X@mail.com",
-            "093-245-7894@sms.bank.co.th": "X**********4@sms.bank.co.th",
+            "093-245-7894@sms.bank.co.th": "0**********4@sms.bank.co.th",
             "Address: 093-245-7894": "Address: XXX-XXX-7894",
         }
         for text, expected in cases.items():
@@ -57,6 +59,16 @@ class MaskingRegressions(unittest.TestCase):
                     self.assertEqual(response.summary.model_dump(), detected.summary.model_dump())
                     self.assertEqual([m.model_dump() for m in response.matches], [m.model_dump() for m in detected.matches])
                     self.assertEqual(mask(MaskRequest(text=expected)).masked_text, expected)
+
+    def test_email_takes_priority_over_contained_phone(self):
+        text = "093-245-7894@sms.bank.co.th | 093-245-7894"
+        expected = "0**********4@sms.bank.co.th | XXX-XXX-7894"
+        response = mask(MaskRequest(text=text))
+        self.assertEqual(response.masked_text, expected)
+        self.assertEqual(response.summary.by_type, {"email": 1, "phone": 1})
+        self.assertEqual(detect(DetectRequest(text=text)).summary.by_type, {"email": 1, "phone": 1})
+        self.assertEqual(mask(MaskRequest(text=text, enabled_rules=["phone"])).masked_text,
+                         "XXX-XXX-7894@sms.bank.co.th | XXX-XXX-7894")
 
     def test_rule_selection_and_malformed_email(self):
         text = "093-245-7894"
