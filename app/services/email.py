@@ -1,5 +1,3 @@
-"""Email detection and censoring."""
-
 import re
 from collections.abc import Sequence
 

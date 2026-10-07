@@ -1,5 +1,3 @@
-"""Pydantic models describing the request/response shapes for masking."""
-
 from pydantic import BaseModel, Field
 from typing import Dict
 

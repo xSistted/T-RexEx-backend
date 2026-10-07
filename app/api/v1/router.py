@@ -1,8 +1,3 @@
-"""Aggregates every v1 route module into a single router.
-
-Add new feature routers here — main.py only ever includes this one router.
-"""
-
 from fastapi import APIRouter
 
 from app.api.v1.routes import health, detect, mask, rules

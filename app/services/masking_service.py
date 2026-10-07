@@ -1,5 +1,3 @@
-"""Detect on original text and combine masks without exposing overlapping data."""
-
 from app.services import email, credit, tel_censor_service, dob_censor_service, address_censor_service
 from app.services.types import Detection
 
@@ -27,13 +25,13 @@ def censor(text: str, detections: list[tuple[str, str, Detection]]) -> str:
     for rule_id, _, detection in detections:
         keyword = detection["keyword"]
         replacement = RULE_MODULES[rule_id][0].censor(keyword)
-        # Every assignment mask preserves length, so original offsets remain valid.
+
         if len(replacement) != len(keyword):
             raise ValueError("Mask replacements must preserve length")
         start, _ = detection["position"]
         for offset, (original, masked) in enumerate(zip(keyword, replacement)):
             if original != masked:
                 index = start + offset
-                # Combine hidden characters; retain email's * at shared positions.
+
                 output[index] = "*" if masked == "*" or output[index] == "*" else masked
     return "".join(output)

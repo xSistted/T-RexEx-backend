@@ -1,10 +1,7 @@
-"""Pydantic models describing the masking rule metadata responses."""
-
 from pydantic import BaseModel, Field
 
 
 class Rule(BaseModel):
-    """Metadata for a single masking rule, rendered by the frontend panel."""
 
     id: str = Field(..., examples=["credit_card"])
     label_th: str = Field(..., examples=["เลขบัตรเครดิต"])
@@ -16,6 +13,5 @@ class Rule(BaseModel):
 
 
 class RuleList(BaseModel):
-    """Envelope returned by ``GET /rules``."""
 
     rules: list[Rule]
