@@ -1,5 +1,3 @@
-"""Email detection and censoring."""
-
 import re
 from collections.abc import Sequence
 
@@ -8,7 +6,7 @@ from app.services.types import Detection
 
 _PATTERN = re.compile(
     r"""
-    (?<![A-Za-z0-9._%+\-])
+    (?<![A-Za-z0-9._%+\-@])
 
     (?P<local>
         [A-Za-z0-9_%+\-]+
@@ -26,7 +24,7 @@ _PATTERN = re.compile(
         [A-Za-z]{2,63}
     )
 
-    (?![A-Za-z0-9._-])
+    (?![A-Za-z0-9_-]|\.[A-Za-z0-9_-])
     """,
     re.IGNORECASE | re.VERBOSE,
 )

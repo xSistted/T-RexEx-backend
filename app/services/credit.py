@@ -1,6 +1,3 @@
-
-"""Credit card detection and censoring."""
-
 import re
 from collections.abc import Sequence
 
@@ -9,7 +6,7 @@ from app.services.types import Detection
 
 _PATTERN = re.compile(
     r"(?<![0-9-])"
-    r"[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}"
+    r"(?:[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}|[0-9]{16})"
     r"(?![0-9-])"
 )
 
@@ -61,10 +58,7 @@ def censor(
                 f"Detection does not match text at {(start, end)}"
             )
 
-        replacement = (
-            "XXXX-XXXX-XXXX-"
-            + keyword[-4:]
-        )
+        replacement = re.sub(r"[0-9]", "X", keyword[:-4]) + keyword[-4:]
 
         text = (
             text[:start]
